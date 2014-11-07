@@ -1,5 +1,8 @@
 var helper = require('jsdoc/util/templateHelper');
 var minifier = require('html-minifier');
+var uglify = require("uglify-js");
+var path = require('jsdoc/path');
+var fs = require('jsdoc/fs');
 
 function minify(html) {
   return minifier.minify(html, {
@@ -78,11 +81,57 @@ exports.publish = function(taffyData, opts, tutorials) {
     doccos.push(current);
   });
 
-  console.log("(function() {");
-  console.log("angular.module('ngDocData', [])");
-  console.log(".constant('$title',   ", env.conf.templates.windowTitle ? JSON.stringify(env.conf.templates.windowTitle) : "'API documentation'", ')');
-  console.log(".constant('$readme',  ", opts.readme ? JSON.stringify(opts.readme) : "''", ')');
-  console.log(".constant('$doclets', ", JSON.stringify(doccos, null, 2), ');');
-  console.log("})();");
+  /* Non-minified angular script */
+  var script = "(function() {"
+             + "angular.module('jsDocNG-Data', [])"
+             + ".constant('$title',   " + (env.conf.templates.windowTitle ? JSON.stringify(env.conf.templates.windowTitle) : "'API documentation'") + ')'
+             + ".constant('$readme',  " + (opts.readme ? JSON.stringify(opts.readme) : "''") + ')'
+             + ".constant('$doclets', " + JSON.stringify(doccos, null, 2) + ');'
+             + "})();"
 
+  /* Should we minify? YES! (by default) */
+  if (env.conf.uglify != null ? env.conf.uglify : true) {
+    script = uglify.minify(script, {fromString: true}).code;
   }
+
+  /* Paths here and there */
+  var srcdir = opts.template;
+  var outdir = opts.destination;
+  var fontdir = path.join(outdir, 'fonts');
+  var libsdir = path.join(outdir, 'libs');
+
+  /* Create all our directories */
+  fs.mkPath(outdir);
+  fs.mkPath(libsdir);
+  fs.mkPath(fontdir);
+
+  /* Read in our "index.pub.html", and replace our title */
+  var index = fs.readFileSync(path.join(srcdir, 'src', 'index.pub.html'), 'utf8');
+  if (env.conf.templates.windowTitle) {
+    index = index.replace("<title>API Documentation</title>",
+                          "<title>" + env.conf.templates.windowTitle + "</title>");
+  }
+
+  /* Minify the index */
+  index = minify(index);
+
+  /* Write index and doclet data */
+  fs.writeFileSync(path.join(outdir, 'index.html'), index, 'utf8');
+  fs.writeFileSync(path.join(outdir, 'jsdocng.data.js'), script, 'utf8');
+
+  /* Copy minified JS and CSS */
+  fs.copyFileSync(path.join(srcdir, 'dist', 'jsdocng.min.js'), outdir);
+  fs.copyFileSync(path.join(srcdir, 'dist', 'jsdocng.min.css'), outdir);
+
+  /* Copy libraries and fonts */
+  fs.ls(path.join(srcdir, 'src', 'libs')).forEach(function(file) {
+    fs.copyFileSync(file, libsdir);
+  });
+
+  fs.ls(path.join(srcdir, 'src', 'fonts')).forEach(function(file) {
+    fs.copyFileSync(file, fontdir);
+  });
+
+  console.log(index);
+
+}
