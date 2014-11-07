@@ -1,0 +1,16 @@
+{
+  "name": "jsdoc-ng",
+  "version": "0.0.0",
+  "description": "A JsDoc template written with NG",
+  "main": "publish.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/usrz/javascript-jsdoc-ng.git"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-less": "^0.12.0",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-jsdoc": "^0.5.7"
+  }
+}
