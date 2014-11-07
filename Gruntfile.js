@@ -1,73 +1,61 @@
 module.exports = function(grunt) {
   grunt.initConfig({
 
-    /* Unit testing */
-    'karma': {
-      'load': {
-        configFile: 'karma.load.js',
-        runnerPort: 9999,
-        singleRun: true,
-        browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Safari'],
-        logLevel: 'ERROR'
-      },
+    /* Wrap NG templates */
+    'ngtemplates': {
       'default': {
-        configFile: 'karma.conf.js',
-        runnerPort: 9999,
-        singleRun: true,
-        browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Safari'],
-        logLevel: 'ERROR'
-      },
-    },
-
-    /* Uglify task */
-    'uglify': {
-      'load': {
-        src: 'src/esquire-load.js',
-        dest: 'esquire-load.min.js'
-      },
-      'inject': {
-        src: 'src/esquire-inject.js',
-        dest: 'esquire-inject.min.js'
-      },
-      'defaut': {
-        src: [ 'src/esquire-inject.js', 'src/esquire-load.js' ],
-        dest: 'esquire.min.js'
-      }
-    },
-
-    /* Documentation task */
-    'jsdoc' : {
-      'dist' : {
-        src: ['src/*.js', 'README.md',
-              'node_modules/grunt-jsdoc/node_modules/jsdoc/lib/jsdoc/**/*.js',
-              '../ngdocs/footest/**/*.js',
-              'node_modules/jaguarjs-jsdoc/demo/sample/**/*.js' ],
-        options: {
-          destination: 'docs',
-          template : 'node_modules/jaguarjs-jsdoc',
-          configure : 'jsdoc.conf.json'
+        'src': 'src/templates/**.html',
+        'dest': 'build/jsdocng-templates.js',
+        'options': {
+          'module': 'jsDocNG-Templates',
+          'bootstrap': function(module, script) {
+            return "angular.module('" + module + "', [])"
+                 + ".run(['$templateCache', function($templateCache) {"
+                 + script + "}]);"
+          },
+          'url': function(url) { return url.substring(4); },
+          'htmlmin': {
+            collapseBooleanAttributes:      true,
+            collapseWhitespace:             true,
+            removeAttributeQuotes:          true,
+            removeComments:                 true,
+            removeEmptyAttributes:          true,
+            removeRedundantAttributes:      true,
+            removeScriptTypeAttributes:     true,
+            removeStyleLinkTypeAttributes:  true
+          }
         }
       }
     },
 
-    /* Publish GirHub Pages */
-    'gh-pages': {
-      src: '**/*',
-      'options': {
-        base: 'docs'
+    /* Uglify task */
+    'uglify': {
+      'defaut': {
+        src: ['src/jsdocng.js', 'build/jsdocng-templates.js'],
+        dest: 'dist/jsdocng.min.js',
+        'options': { 'wrap': true }
+      }
+    },
+
+    /* Lessify task */
+    'less': {
+      'defaut': {
+        src: 'src/jsdocng.less',
+        dest: 'dist/jsdocng.min.css',
+        options: { compress: true }
       }
     }
 
   });
 
   /* Load our plugins */
-  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-angular-templates');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jsdoc');
-  grunt.loadNpmTasks('grunt-gh-pages');
 
   /* Default task: requirejs then uglify */
-  grunt.registerTask('default', ['karma',   'uglify'  ]);
-  grunt.registerTask('docs',    ['jsdoc',   'gh-pages']);
+  grunt.registerTask('default', ['ngtemplates', 'uglify', 'less']);
 
 };
