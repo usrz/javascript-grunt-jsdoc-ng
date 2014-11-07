@@ -1,0 +1,7 @@
+<div class="example" ng-controller="exampleController">
+  <caption ng-if="caption">{{caption|html}}</caption>
+  <div class="container">
+    <div class="language" ng-if="language">{{language}}</div>
+    <pre class="hljs" ng-bind-html="example|html"></pre>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="title"><a href="#!/">{{title}}</a></div>
+
+<ul class="nav top">
+  <li ng-if="globals"
+      ng-include="'templates/navbar-module.html'"
+      ng-controller="globalsController">
+  </li>
+  <li ng-if="modules"
+      ng-repeat="module in modules"
+      ng-include="'templates/navbar-module.html'"
+      ng-controller="moduleController">
+  </li>
+</ul>

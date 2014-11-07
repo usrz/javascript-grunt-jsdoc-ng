@@ -1,0 +1,18 @@
+<h1 class="literal">
+  <span class="name">Globals</span>
+</h1>
+
+<div ng-if="elements.function">
+  <h2>Functions</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.function"></div>
+</div>
+
+<div ng-if="elements.member">
+  <h2>Members</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.member"></div>
+</div>
+
+<div ng-if="elements.event">
+  <h2>Events</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.event"></div>
+</div>

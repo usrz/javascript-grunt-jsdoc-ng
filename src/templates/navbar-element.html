@@ -1,0 +1,34 @@
+<div class="kind-{{element.kind}}">
+  <span ng-if="element.$prefix" class="kind-prefix">{{element.$prefix}}.</span
+  ><a ng-href="#!/{{element.$href}}">{{element.name}}</a
+></div>
+
+<div ng-controller="navbarExpandedController" doclet="element"
+     ng-if="(selectedDocletID == element.$id) &amp;&amp; (element.kind == 'class')">
+
+  <ul class="nav expanded" ng-if="elements">
+
+    <li ng-if="elements.function" class="header">Functions</li>
+    <li ng-if="elements.function"
+        ng-repeat="function in elements.function">
+      <div class="kind-function" ng-class="{'static' : (function.scope == 'static')}">
+        <a ng-href="#!/{{function.$href}}">{{function.name}}</a>
+      </div>
+    </li>
+
+    <li ng-if="elements.member" class="header">Members</li>
+    <li ng-if="elements.member"
+        ng-repeat="member in elements.member">
+      <div class="kind-member" ng-class="{'static' : (member.scope == 'static')}">
+        <a ng-href="#!/{{member.$href}}">{{member.name}}</a>
+      </div>
+    </li>
+
+    <li ng-if="elements.event" class="header">Events</li>
+    <li ng-if="elements.event"
+        ng-repeat="event in elements.event">
+      <div class="kind-event"><a ng-href="#!/{{event.$href}}">{{event.name}}</a></div>
+    </li>
+
+  </ul>
+</div>

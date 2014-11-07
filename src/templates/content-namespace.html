@@ -1,0 +1,32 @@
+<h1 class="literal">
+  <span class="kind">namespace</span>
+  <span class="prefix" ng-if="doclet.$prefix">{{doclet.$prefix}}.</span
+  ><span class="name">{{doclet.name}}</span>
+</h1>
+
+<div ng-if="doclet.description" ng-bind-html="doclet.description|html"></div>
+
+<div ng-if="elements.function">
+  <h2>Functions</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.function"></div>
+</div>
+
+<div ng-if="elements.member">
+  <h2>Members</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.member"></div>
+</div>
+
+<div ng-if="elements.event">
+  <h2>Events</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.event"></div>
+</div>
+
+<div ng-if="elements.class">
+  <h2>Classes</h2>
+  <div ng-include="'templates/content-innerclass.html'" ng-repeat="class in elements.class"></div>
+</div>
+
+<div ng-if="doclet.examples">
+  <h2>Examples</h2>
+  <div ng-include="'templates/content-example.html'" ng-repeat="example in doclet.examples"></div>
+</div>

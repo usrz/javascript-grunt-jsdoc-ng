@@ -1,0 +1,49 @@
+<h3 id="{{element.name}}" class="literal" ng-class="{'static':(element.scope=='static')}">
+    <span class="kind">{{element.kind}}</span>
+    <span class="name">{{element.name}}</span
+   ><span ng-if="element.params || (element.kind == 'function') || (element.kind == 'class')"
+     ><span>(</span
+     ><span ng-repeat="param in element.params"
+       ><span ng-if="!$first">,&nbsp;</span
+       ><span class="param">{{param.name}}</span
+     ></span>)</span
+   ></span
+   ><span class="types" ng-if="element.type.names"
+     ><span class="type" ng-repeat="type in element.type.names">{{type}}</span
+   ></span
+   ><span class="static" ng-if="element.scope == 'static'"></span>
+</h3>
+
+<div class="details">
+  <div class="description" ng-bind-html="element.description|html"></div>
+
+  <div ng-if="element.params">
+    <h4>Parameters</h4>
+    <ul class="parameters">
+      <li ng-repeat="param in element.params">
+        <span class="types"
+            ><span class="type" ng-repeat="type in param.type.names">{{type}}</span
+        ></span>
+        <span class="name">{{param.name}}</span>
+        <span ng-bind-html="param.description|html"></span>
+      </li>
+    </ul>
+  </div>
+
+  <div ng-if="element.returns">
+    <h4>Returns</h4>
+    <ul class="returns">
+      <li ng-repeat="return in element.returns">
+        <span class="types"
+           ><span class="type" ng-repeat="type in return.type.names">{{type}}</span
+        ></span>
+        <span ng-bind-html="return.description|html"></span>
+      </li>
+    </ul>
+  </div>
+
+  <div ng-if="element.examples">
+    <h4>Examples</h4>
+    <div ng-include="'templates/content-example.html'" ng-repeat="example in element.examples"></div>
+  </div>
+</div>

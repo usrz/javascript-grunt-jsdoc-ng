@@ -1,0 +1,7 @@
+<h3 id="{{function.name}}" class="literal">
+  <span class="kind">class</span>
+  <span class="prefix" ng-if="class.$prefix">{{class.$prefix}}.</span
+  ><span class="name"><a href="#!/{{class.$href}}">{{class.name}}</a></span>
+</h3>
+
+<div ng-if="class.classdesc" ng-bind-html="class.classdesc|html"></div>

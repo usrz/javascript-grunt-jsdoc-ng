@@ -1,0 +1,357 @@
+/* ========================================================================== *
+ * MAIN LAYOUT                                                                *
+ * ========================================================================== */
+
+html, body {
+  font-family: 'Ubuntu', 'Helvetica', 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+div.nav {
+  position: fixed;
+  overflow: scroll;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 250px;
+  padding: 10px 10px 50px 10px;
+  margin: 0px;
+}
+
+div.content {
+  margin-left: 270px;
+  margin-bottom: 50px;
+  padding: 10px 30px 10px 20px;
+}
+
+pre, code {
+  font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+}
+
+/* Links */
+a {
+  color: #669;
+  text-decoration: none;
+  &:hover   { text-decoration: underline; }
+  &:visited { color: #669; }
+  code      { color: #339; }
+}
+
+code {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1px 4px;
+  color: #333;
+}
+
+pre {
+  border: 1px solid #999;
+  background-color: #eee;
+  padding: 10px;
+  overflow: scroll;
+}
+
+/* ========================================================================== *
+ * NAVBAR                                                                     *
+ * ========================================================================== */
+
+div.nav {
+
+  /* Basics */
+  background-color: #333;
+  font-weight: 300;
+  color: #666;
+
+  /* Links */
+  a {
+    color: #ccc;
+    text-decoration: none;
+    &:hover   { text-decoration: underline; }
+    &:visited { color: #ccc; }
+  }
+
+  /* Title */
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+  }
+
+  /* Any function is always followed by (...) */
+  .kind-function::after {
+    content: '(\2026)';
+    padding-left: 0.2em;
+  }
+
+  /* All "nav" lists */
+  ul.nav {
+    list-style: none;
+    padding: 0px 0px 0px 10px;
+    margin: 0px;
+
+    /* Top list */
+    &.top {
+      padding-left: 0px;
+
+      /* Spacing between modules */
+      & > li { margin-top: 20px; }
+
+      /* Decorate module name */
+      .header.module::after {
+        content: "module";
+        font-size: 0.8em;
+        padding-left: 1em;
+      }
+
+
+    }
+
+    /* Group lists (functions, classes, ...) */
+    &.group {
+      border-left: 1px solid #444;
+      margin: 10px 0px 10px 5px;
+
+      /* Spacing, positioning, expansion */
+      > li {
+        margin-left: 10px;
+        padding: 2px 0px 2px 10px;
+        &.expanded {
+          background-color: rgba(0, 0, 0, 0.1);
+          border-radius: 4px;
+          margin-right: 10px;
+        }
+        &.header {
+          margin: 5px 0px;
+          text-transform: uppercase;
+          font-weight: bold;
+          font-size: 10px;
+          color: #888;
+        }
+      }
+    }
+
+    /* Expanded list (class) */
+    &.expanded {
+      padding: 0px 0px 10px 10px;
+
+      /* Static label for function/members */
+      .static {
+        position: relative;
+        &:before {
+          content: "S" ;
+          display: block;
+          position: absolute;
+          text-align: center;
+          width: 10px;
+          min-width: 10px;
+          max-width: 10px;
+          height: 10px;
+          min-height: 10px;
+          max-height: 10px;
+          overflow: hide;
+          top: 2px;
+          left: -16px;
+          font-size: 7px;
+          padding: 1px 0px 0px 0px;
+          font-weight: bold;
+          font-style: normal;
+          background-color: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 3px;
+          color: #999;
+          opacity: 0.5;
+        }
+      }
+
+      /* Spacing, positioning, expansion */
+      > li {
+        margin: 2px 0px 2px 20px;
+        &.header {
+          margin: 5px 0px 5px 10px;
+          text-transform: uppercase;
+          font-weight: bold;
+          font-size: 10px;
+          color: #888;
+        }
+      }
+
+    }
+
+  }
+}
+
+/* ========================================================================== *
+ * CONTENT                                                                    *
+ * ========================================================================== */
+
+div.content {
+
+  h1 { // Class, module, namespace name...
+    font-size: 36px;
+  }
+
+  h2 { // "Functions", "Members", ...
+    font-size: 24px;
+    padding-top: 20px;
+    margin-top: 20px;
+
+    /* Little border separator */
+    &:before {
+      content: "\A0";
+      border-top: 1px solid #ccc;
+      margin: 0px 30% 10px 30%;
+      display: block;
+    }
+  }
+
+  h3 { // "function myFoo(bar, baz)", "var myTest", ...
+    font-size: 18px;
+    margin-top: 30px;
+    padding: 10px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    /* Static label */
+    &.static {
+      &:after {
+        content: 'static';
+        position: relative;
+        top: -2px;
+        font-size: 10px;
+        font-weight: 300;
+        border: 1px solid #aaa;
+        background-color: #bbb;
+        border-radius: 4px;
+        color: #fff;
+        padding: 2px;
+      };
+    }
+
+    /* Type for members */
+    .types {
+      margin-left: 10px;
+      margin-right: 0px;
+      font-size: 12px;
+      position: relative;
+      top: -1px;
+    }
+  }
+
+  h4 { // "Parameters", "Returns", ...
+    color: #666;
+  }
+
+  /* Literals in heading */
+  h1.literal, h3.literal {
+    font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+    color: #999;
+    font-weight: 300;
+
+    .kind { // *function* prefix.myName(param, ...)
+      font-family: 'Ubuntu', 'Helvetica', 'Arial', sans-serif;
+      font-size: 0.6em;
+      font-style: italic;
+    }
+
+    .prefix { // function *prefix.*myName(param, ...)
+      font-family: 'Ubuntu', 'Helvetica', 'Arial', sans-serif;
+      font-size: 0.6em;
+      font-weight: 300;
+    }
+
+    .name { // function prefix.*myName*(param, ...)
+      color: #000;
+      font-weight: 700;
+      font-style: normal;
+    }
+    .param { // function prefix.myName(*param*, ...)
+      color: #444;
+      font-weight: 400;
+      font-style: normal;
+    }
+  }
+
+  /* Wraps all details for function, member, event, ... */
+  .details {
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #ccc;
+  }
+
+  /* Parameters, returns and types */
+  ul.parameters, ul.returns, ul.types {
+    li {
+      margin: 6px 0px;
+      line-height: 20px;
+      text-indent: -50px;
+      padding-left: 50px;
+
+      p {
+        display: inline;
+      }
+    }
+    .name { // param names
+      font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1px 4px;
+      margin-right: 10px;
+    }
+
+  }
+
+  /* List of types (in parameters, returns, and members) */
+  .types { // types list
+    font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: 10px;
+    padding: 1px 10px;
+    margin-right: 10px;
+
+    .type {
+      color: #944;
+      margin-left: 5px;
+      border-left: 1px solid #fbb;
+      padding-left: 5px;
+
+      &:first-child {
+        margin: 0px;
+        padding: 0px;
+        border: none;
+      }
+    }
+  }
+
+  /* Examples */
+  .example {
+    .container { // holds language + <pre>
+      position: relative;
+      .language {
+        position: absolute;
+        font-size: 12px;
+        padding: 3px 6px 4px 6px;
+        border-left: 1px solid #999;
+        border-right: 1px solid #999;
+        border-bottom: 1px solid #999;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #aaa;
+        font-weight: 300;
+        color: #fff;
+        right: 10px;
+        top: 1px;
+      }
+    }
+  }
+
+}

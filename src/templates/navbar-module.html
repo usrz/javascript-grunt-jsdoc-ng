@@ -1,0 +1,44 @@
+<div ng-if="!module" class="header globals">Globals</div>
+<div ng-if="module" class="header module">
+  <span ng-if="module.$prefix" class="kind-prefix">{{module.$prefix}}.</span
+  ><a ng-href="#!/{{module.$href}}">{{module.name}}</a
+></div>
+
+<ul class="nav group" ng-if="elements">
+  <li ng-if="elements.class" class="header">Classes</li>
+  <li ng-if="elements.class"
+      ng-repeat="element in elements.class"
+      ng-class="{'expanded' : (selectedDocletID == element.$id)}"
+      ng-include="'templates/navbar-element.html'"></li>
+
+  <li ng-if="elements.function" class="header">Functions</li>
+  <li ng-if="elements.function"
+      ng-repeat="element in elements.function"
+      ng-class="{'expanded' : (selectedDocletID == element.$id)}"
+      ng-include="'templates/navbar-element.html'"></li>
+
+  <li ng-if="elements.member" class="header">Members</li>
+  <li ng-if="elements.member"
+      ng-repeat="element in elements.member"
+      ng-class="{'expanded' : (selectedDocletID == element.$id)}"
+      ng-include="'templates/navbar-element.html'"></li>
+
+  <li ng-if="elements.event" class="header">Events</li>
+  <li ng-if="elements.event"
+      ng-repeat="element in elements.event"
+      ng-class="{'expanded' : (selectedDocletID == element.$id)}"
+      ng-include="'templates/navbar-element.html'"></li>
+
+  <li ng-if="elements.typedef" class="header">Type Definitions</li>
+  <li ng-if="elements.typedef"
+      ng-repeat="element in elements.typedef"
+      ng-class="{'expanded' : (selectedDocletID == element.$id)}"
+      ng-include="'templates/navbar-element.html'"></li>
+
+  <li ng-if="elements.namespace" class="header">Name Spaces</li>
+  <li ng-if="elements.namespace"
+      ng-repeat="element in elements.namespace"
+      ng-class="{'expanded' : (selectedDocletID == element.$id)}"
+      ng-include="'templates/navbar-element.html'"></li>
+
+</ul>
