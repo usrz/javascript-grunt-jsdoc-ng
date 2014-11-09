@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     'ngtemplates': {
       'default': {
         'src': 'src/templates/**.html',
-        'dest': 'build/jsdocng-templates.js',
+        'dest': 'dist/jsdoc-ng-templates.js',
         'options': {
           'module': 'jsDocNG-Templates',
           'bootstrap': function(module, script) {
@@ -32,8 +32,8 @@ module.exports = function(grunt) {
     /* Uglify task */
     'uglify': {
       'defaut': {
-        src: ['src/jsdocng.js', 'build/jsdocng-templates.js'],
-        dest: 'dist/jsdocng.min.js',
+        src: ['src/jsdoc-ng.js', 'dist/jsdoc-ng-templates.js'],
+        dest: 'dist/jsdoc-ng.min.js',
         'options': { 'wrap': true }
       }
     },
@@ -41,8 +41,8 @@ module.exports = function(grunt) {
     /* Lessify task */
     'less': {
       'defaut': {
-        src: 'src/jsdocng.less',
-        dest: 'dist/jsdocng.min.css',
+        src: 'src/jsdoc-ng.less',
+        dest: 'dist/jsdoc-ng.min.css',
         options: { compress: true }
       }
     },

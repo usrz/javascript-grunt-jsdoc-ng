@@ -1,2 +1,4 @@
 .*
-src/jsdocng.data.js
+dist/jsdoc-ng-templates.js
+node_modules/
+src/jsdoc-ng.data.js

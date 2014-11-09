@@ -116,11 +116,11 @@ exports.publish = function(taffyData, opts, tutorials) {
 
   /* Write index and doclet data */
   fs.writeFileSync(path.join(outdir, 'index.html'), index, 'utf8');
-  fs.writeFileSync(path.join(outdir, 'jsdocng.data.js'), script, 'utf8');
+  fs.writeFileSync(path.join(outdir, 'jsdoc-ng.data.js'), script, 'utf8');
 
   /* Copy minified JS and CSS */
-  fs.copyFileSync(path.join(srcdir, 'dist', 'jsdocng.min.js'), outdir);
-  fs.copyFileSync(path.join(srcdir, 'dist', 'jsdocng.min.css'), outdir);
+  fs.copyFileSync(path.join(srcdir, 'dist', 'jsdoc-ng.min.js'), outdir);
+  fs.copyFileSync(path.join(srcdir, 'dist', 'jsdoc-ng.min.css'), outdir);
 
   /* Copy libraries and fonts */
   fs.ls(path.join(srcdir, 'src', 'libs')).forEach(function(file) {
