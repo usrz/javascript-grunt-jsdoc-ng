@@ -1,21 +1,11 @@
 var helper = require('jsdoc/util/templateHelper');
+var logger = require('jsdoc/util/logger');
 var path = require('jsdoc/path');
 var fs = require('jsdoc/fs');
 
-/* Specify dependencies by hand, Grunt JSDoc seems to be having issues */
-//var minifier = require(path.join(env.opts.template, 'node_modules', 'html-minifier'));
-//var uglify = require(path.join(env.opts.template, 'node_modules', 'uglify-js'));
-
-
+/* Minification */
 function minify(html) {
   return html;
-  // return minifier.minify(html, {
-  //   removeComments: true,
-  //   collapseWhitespace: true,
-  //   conservativeCollapse: true,
-  //   preserveLineBreaks: false,
-  //   collapseBooleanAttributes: true
-  // });
 }
 
 function renderLinks(helper, doclet) {
@@ -59,6 +49,33 @@ function createLink(helper, doclet, data) {
 
 exports.publish = function(taffyData, opts, tutorials) {
 
+  /* Break line after "Generating output files..." */
+  logger.printInfo("\n");
+
+  /* Minify/uglify? (default: yes!) */
+  var doMinify = true;
+  if (env.conf.templates.minify != null) {
+    doMinify = env.conf.templates.minify;
+  }
+
+  /* Override the HTML minifier above */
+  if (doMinify) {
+    logger.info("Output minification enabled");
+    var minifier = require('html-minifier');
+    minify = function(html) {
+      return minifier.minify(html, {
+        removeComments: true,
+        collapseWhitespace: true,
+        conservativeCollapse: true,
+        preserveLineBreaks: false,
+        collapseBooleanAttributes: true
+      });
+    }
+  } else {
+    logger.info("Output minification disabled");
+  }
+
+  /* Process all our doclets */
   var data = helper.prune(taffyData);
   helper.addEventListeners(data);
   helper.setTutorials(tutorials);
@@ -93,6 +110,12 @@ exports.publish = function(taffyData, opts, tutorials) {
              + ".constant('$doclets', " + JSON.stringify(doccos, null, 2) + ');'
              + "})();"
 
+  if (doMinify) {
+    logger.info("Minifying JavaScript output");
+    var uglifier = require('uglify-js');
+    script = uglifier.minify(script, {fromString: true}).code;
+  }
+
   /* Paths here and there */
   var outdir = opts.destination;
   var srcdir = path.join(opts.template, '..');
@@ -115,6 +138,8 @@ exports.publish = function(taffyData, opts, tutorials) {
   index = minify(index);
 
   /* Write index and doclet data */
+  logger.printInfo("Writing output files...");
+
   fs.writeFileSync(path.join(outdir, 'index.html'), index, 'utf8');
   fs.writeFileSync(path.join(outdir, 'jsdoc-ng.data.js'), script, 'utf8');
 

@@ -51,7 +51,7 @@ module.exports = function(grunt) {
     'jsdoc-ng' : {
       'dist' : {
         template: 'jsdoc-ng',
-        dest: 'samples-docs',
+        dest: 'samples-output',
         src: ['samples/README.md',
               'samples/*.js',
               'node_modules/grunt-jsdoc/node_modules/jsdoc/lib/jsdoc/**/*.js'],

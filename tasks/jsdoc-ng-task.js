@@ -36,7 +36,6 @@ module.exports = function(grunt) {
     /* Our configurations file, to pass to JSDoc */
     var config = new tmp.File();
     config.writeFileSync(JSON.stringify(this.options()), 'utf8');
-    grunt.log.warn(config.path);
 
     /* Remember our options defaulter */
     var template = this.data.template || null;
