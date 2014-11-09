@@ -59,7 +59,6 @@ function createLink(helper, doclet, data) {
 
 exports.publish = function(taffyData, opts, tutorials) {
 
-try {
   var data = helper.prune(taffyData);
   helper.addEventListeners(data);
   helper.setTutorials(tutorials);
@@ -94,14 +93,9 @@ try {
              + ".constant('$doclets', " + JSON.stringify(doccos, null, 2) + ');'
              + "})();"
 
-  /* Should we minify? YES! (by default) */
-  // if (env.conf.uglify != null ? env.conf.uglify : true) {
-  //   script = uglify.minify(script, {fromString: true}).code;
-  // }
-
   /* Paths here and there */
-  var srcdir = opts.template;
   var outdir = opts.destination;
+  var srcdir = path.join(opts.template, '..');
   var fontdir = path.join(outdir, 'fonts');
   var libsdir = path.join(outdir, 'libs');
 
@@ -136,10 +130,5 @@ try {
   fs.ls(path.join(srcdir, 'src', 'fonts')).forEach(function(file) {
     fs.copyFileSync(file, fontdir);
   });
-
-  console.log(index);
-} catch (exception) {
-  console.warn(exception);
-}
 
 }
