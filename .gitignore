@@ -1,5 +1,5 @@
 .*
 dist/jsdoc-ng-templates.js
 node_modules/
-samples-docs/
+samples-output/
 src/jsdoc-ng.data.js
