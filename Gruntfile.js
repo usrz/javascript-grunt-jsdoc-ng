@@ -48,15 +48,24 @@ module.exports = function(grunt) {
     },
 
     /* Sample doccos */
-    'jsdocng' : {
+    'jsdoc-ng' : {
       'dist' : {
-        src: ['README.md',
+        template: 'jsdoc-ng',
+        dest: 'samples-docs',
+        src: ['samples/README.md',
               'samples/*.js',
-              'node_modules/grunt-jsdoc/node_modules/jsdoc/lib/jsdoc/**/*.js' ],
+              'node_modules/grunt-jsdoc/node_modules/jsdoc/lib/jsdoc/**/*.js'],
         options: {
-          configure : 'jsdoc.conf.json',
-          destination: 'docs',
-          template : '.'
+          "plugins": ["plugins/markdown"],
+          "templates": {
+            "cleverLinks":    true,
+            "monospaceLinks": true,
+            "windowTitle": "jsDocNG Sample"
+          },
+          "markdown": {
+            "parser": "gfm",
+            "hardwrap": true
+          }
         }
       }
     }
@@ -64,15 +73,14 @@ module.exports = function(grunt) {
   });
 
   /* Register ourself (sans NPN) */
-  require("./tasks/jsdoc-ng-task")(grunt);
-  //grunt.loadNpmTasks('./gruter');
+  grunt.loadTasks("./tasks");
 
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-jsdoc');
 
   /* Default task: requirejs then uglify */
   grunt.registerTask('default', ['ngtemplates', 'uglify', 'less']);
+  grunt.registerTask('samples', ['default', 'jsdoc-ng']);
 
 };
