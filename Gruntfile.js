@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+
   grunt.initConfig({
 
     /* Wrap NG templates */
@@ -44,11 +45,28 @@ module.exports = function(grunt) {
         dest: 'dist/jsdocng.min.css',
         options: { compress: true }
       }
+    },
+
+    /* Sample doccos */
+    'jsdocng' : {
+      'dist' : {
+        src: ['README.md',
+              'samples/*.js',
+              'node_modules/grunt-jsdoc/node_modules/jsdoc/lib/jsdoc/**/*.js' ],
+        options: {
+          configure : 'jsdoc.conf.json',
+          destination: 'docs',
+          template : '.'
+        }
+      }
     }
 
   });
 
-  /* Load our plugins */
+  /* Register ourself (sans NPN) */
+  require("./tasks/jsdoc-ng-task")(grunt);
+  //grunt.loadNpmTasks('./gruter');
+
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');

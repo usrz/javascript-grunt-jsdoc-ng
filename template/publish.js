@@ -1,17 +1,21 @@
 var helper = require('jsdoc/util/templateHelper');
-var minifier = require('html-minifier');
-var uglify = require("uglify-js");
 var path = require('jsdoc/path');
 var fs = require('jsdoc/fs');
 
+/* Specify dependencies by hand, Grunt JSDoc seems to be having issues */
+//var minifier = require(path.join(env.opts.template, 'node_modules', 'html-minifier'));
+//var uglify = require(path.join(env.opts.template, 'node_modules', 'uglify-js'));
+
+
 function minify(html) {
-  return minifier.minify(html, {
-    removeComments: true,
-    collapseWhitespace: true,
-    conservativeCollapse: true,
-    preserveLineBreaks: false,
-    collapseBooleanAttributes: true
-  });
+  return html;
+  // return minifier.minify(html, {
+  //   removeComments: true,
+  //   collapseWhitespace: true,
+  //   conservativeCollapse: true,
+  //   preserveLineBreaks: false,
+  //   collapseBooleanAttributes: true
+  // });
 }
 
 function renderLinks(helper, doclet) {
@@ -55,6 +59,7 @@ function createLink(helper, doclet, data) {
 
 exports.publish = function(taffyData, opts, tutorials) {
 
+try {
   var data = helper.prune(taffyData);
   helper.addEventListeners(data);
   helper.setTutorials(tutorials);
@@ -90,9 +95,9 @@ exports.publish = function(taffyData, opts, tutorials) {
              + "})();"
 
   /* Should we minify? YES! (by default) */
-  if (env.conf.uglify != null ? env.conf.uglify : true) {
-    script = uglify.minify(script, {fromString: true}).code;
-  }
+  // if (env.conf.uglify != null ? env.conf.uglify : true) {
+  //   script = uglify.minify(script, {fromString: true}).code;
+  // }
 
   /* Paths here and there */
   var srcdir = opts.template;
@@ -133,5 +138,8 @@ exports.publish = function(taffyData, opts, tutorials) {
   });
 
   console.log(index);
+} catch (exception) {
+  console.warn(exception);
+}
 
 }
