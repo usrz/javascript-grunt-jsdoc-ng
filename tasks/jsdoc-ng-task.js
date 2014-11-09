@@ -1,52 +1,162 @@
-/*
- * grunt-jsdoc-ng
- * https://github.com/usrz/javascript-grunt-jsdoc-ng
- *
- * Copyright (c) 2014 Pier Fumagalli
- * Licensed under the Apache, 2.0 licenses.
- */
-
 'use strict';
 
+
+/* Current and JSDoc directories */
+var path = require("path");
+
+var baseDir = path.join(__dirname, '..');
+var jsDocDir = path.join(baseDir, 'node_modules', 'jsdoc');
+var cwDir = process.cwd();
+
+/* Our Grunt plugin */
 module.exports = function(grunt) {
 
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
-
-  grunt.registerMultiTask('jsdocng', 'Create jsDoc Documentation', function() {
-    console.log("jsdocng registered", this.options());
-
-    // Merge task-specific and/or target-specific options with these defaults.
-    // var options = this.options({
-    //   punctuation: '.',
-    //   separator: ', '
-    // });
-
-    // // Iterate over all specified file groups.
-    // this.files.forEach(function(f) {
-    //   // Concat specified files.
-    //   var src = f.src.filter(function(filepath) {
-    //     // Warn on and remove invalid source files (if nonull was set).
-    //     if (!grunt.file.exists(filepath)) {
-    //       grunt.log.warn('Source file "' + filepath + '" not found.');
-    //       return false;
-    //     } else {
-    //       return true;
-    //     }
-    //   }).map(function(filepath) {
-    //     // Read file source.
-    //     return grunt.file.read(filepath);
-    //   }).join(grunt.util.normalizelf(options.separator));
-
-    //   // Handle options.
-    //   src += options.punctuation;
-
-    //   // Write the destination file.
-    //   grunt.file.write(f.dest, src);
-
-    //   // Print a success message.
-    //   grunt.log.writeln('File "' + f.dest + '" created.');
-    // });
+  /*
+   * Create a custom require method that adds `lib/jsdoc` and `node_modules`
+   * to the module lookup path. This makes it possible to `require('jsdoc/foo')`
+   * from external templates and plugins, and within JSDoc itself. It also
+   * allows external templates and plugins to require JSDoc's module
+   * dependencies without installing them locally.
+   */
+  var requizzle = require('../node_modules/jsdoc/node_modules/requizzle')({
+    requirePaths: {
+      before: [ path.join(__dirname, '..', 'node_modules', 'jsdoc', 'lib') ],
+      after:  [ path.join(__dirname, '..', 'node_modules') ]
+    },
+    infect: true
   });
 
+  /* ======================================================================== *
+   * GRUNT: Register ourselves                                                *
+   * ======================================================================== */
+
+  /* Register self */
+  grunt.registerMultiTask('jsdoc-ng', 'Create jsDoc Documentation', function() {
+
+    /* Remember our options defaulter */
+    var template = this.data.template || null;
+    var options = this.options;
+
+    /* We run JSDOC once per every files definition */
+    this.files.forEach(function(f) {
+
+      /* Filter out what we need */
+      var args = []
+      f.src.filter(function(filepath) {
+        if (! grunt.file.exists(filepath)) {
+          grunt.log.warn('Source file "' + filepath + '" not found.');
+          return false;
+        } else {
+          args.push(filepath);
+          return true;
+        }
+      });
+
+      /* Set up our destination directory */
+      args.unshift(f.dest);
+      args.unshift('--destination');
+
+      /* Setup our template */
+      if (template == 'default') {
+        template = path.join(jsDocDir, "templates", "default");
+      } else if (template == 'jsdoc-ng') {
+        template = path.join(baseDir, "template");
+      }
+      if (template) {
+        args.unshift(template);
+        args.unshift('--template');
+      }
+
+
+      /* ==================================================================== *
+       * JSDOC: Environment and runtime initialization                        *
+       * ==================================================================== */
+
+      /* Prepare our global "env" */
+      var env = global.env = {
+        run: {
+          start: new Date(),
+          finish: null
+        },
+        args:        args,
+        conf:        {}, // jsdoc.conf.json
+        dirname:     jsDocDir,
+        pwd:         cwDir,
+        opts:        {},
+        sourceFiles: [],
+        version:     {}
+      };
+
+      /*
+       * NOTE: Do not call "runtime.initialize(...), as it will parse the
+       * command line options from Grunt (and we don't want that)
+       */
+      // var runtime = requizzle('../node_modules/jsdoc/lib/jsdoc/util/runtime');
+      // runtime.initialize([jsDocDir, cwDir]);
+
+      /* Then configure our "app" */
+      var app = global.app = {
+        jsdoc: {
+          name:    requizzle('../node_modules/jsdoc/lib/jsdoc/name'),
+          scanner: new (requizzle('../node_modules/jsdoc/lib/jsdoc/src/scanner').Scanner)(),
+          parser:  null
+        }
+      };
+
+      /* ==================================================================== *
+       * JSDOC: Use Grunt's logger                                            *
+       * ==================================================================== */
+
+      var logger = requizzle('../node_modules/jsdoc/lib/jsdoc/util/logger');
+
+      /* Level is determined by Grunt */
+      logger.setLevel(1000);
+
+      /* Inject Grunt's logging functions */
+      logger.verbose = grunt.verbose.ok;
+      logger.debug   = grunt.log.debug;
+      logger.info    = grunt.log.ok;
+      logger.warn    = grunt.log.error;
+      logger.error   = grunt.log.error;
+      logger.fatal   = grunt.log.error;
+
+      logger.printVerbose = grunt.verbose.write;
+      logger.printDebug   = grunt.log.write; // hmm...
+      logger.printInfo    = grunt.log.write;
+
+      /* ==================================================================== *
+       * JSDOC: Use the command line helper to run within Grunt               *
+       * ==================================================================== */
+
+      var cli = requizzle('../node_modules/jsdoc/cli');
+
+      /* Setup basics */
+      cli.setVersionInfo()
+
+      /* Parse command line arguments from "env.args" and load default options. */
+      cli.loadConfig();
+
+      /* Override whatever was loaded with the options in the GruntFile */
+      var gruntConfig = options({conf: {}});
+      var _ = require('../node_modules/jsdoc/node_modules/underscore');
+      env.opts = _.defaults(gruntConfig, env.opts);
+
+      /* Log what we're doing */
+      grunt.log.subhead("Invoking JsDoc");
+      grunt.verbose.ok("JsDoc command-line arguments", env.args);
+      grunt.verbose.ok("JsDoc configuration options", env.opts);
+
+      /* Run JSDoc */
+      cli.logStart();
+      cli.main(function(result) {
+        cli.logFinish();
+        if (result != 0) {
+          grunt.fail.fatal("Error in JsDoc", result);
+        } else {
+          grunt.log.subhead("JsDoc completed");
+        }
+      });
+
+    }); // END -- this.files.forEach(....)
+  });
 };
