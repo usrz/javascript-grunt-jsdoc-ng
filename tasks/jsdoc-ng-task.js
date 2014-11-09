@@ -1,9 +1,9 @@
 'use strict';
 
+var path = require("path");
+var tmp = require('temporary');
 
 /* Current and JSDoc directories */
-var path = require("path");
-
 var baseDir = path.join(__dirname, '..');
 var jsDocDir = path.join(baseDir, 'node_modules', 'jsdoc');
 var cwDir = process.cwd();
@@ -33,9 +33,13 @@ module.exports = function(grunt) {
   /* Register self */
   grunt.registerMultiTask('jsdoc-ng', 'Create jsDoc Documentation', function() {
 
+    /* Our configurations file, to pass to JSDoc */
+    var config = new tmp.File();
+    config.writeFileSync(JSON.stringify(this.options()), 'utf8');
+    grunt.log.warn(config.path);
+
     /* Remember our options defaulter */
     var template = this.data.template || null;
-    var options = this.options;
 
     /* We run JSDOC once per every files definition */
     this.files.forEach(function(f) {
@@ -51,6 +55,10 @@ module.exports = function(grunt) {
           return true;
         }
       });
+
+      /* Set up our configuration file */
+      args.unshift(config.path);
+      args.unshift('--configure');
 
       /* Set up our destination directory */
       args.unshift(f.dest);
@@ -136,11 +144,6 @@ module.exports = function(grunt) {
       /* Parse command line arguments from "env.args" and load default options. */
       cli.loadConfig();
 
-      /* Override whatever was loaded with the options in the GruntFile */
-      var gruntConfig = options({conf: {}});
-      var _ = require('../node_modules/jsdoc/node_modules/underscore');
-      env.opts = _.defaults(gruntConfig, env.opts);
-
       /* Log what we're doing */
       grunt.log.subhead("Invoking JsDoc");
       grunt.verbose.ok("JsDoc command-line arguments", env.args);
@@ -149,6 +152,7 @@ module.exports = function(grunt) {
       /* Run JSDoc */
       cli.logStart();
       cli.main(function(result) {
+        config.unlinkSync();
         cli.logFinish();
         if (result != 0) {
           grunt.fail.fatal("Error in JsDoc", result);
