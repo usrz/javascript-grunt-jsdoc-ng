@@ -60,7 +60,8 @@ module.exports = function(grunt) {
           "templates": {
             "cleverLinks":    true,
             "monospaceLinks": true,
-            "windowTitle": "jsDocNG Sample"
+            "windowTitle": "jsDocNG Sample",
+            "minify": false
           },
           "markdown": {
             "parser": "gfm",
