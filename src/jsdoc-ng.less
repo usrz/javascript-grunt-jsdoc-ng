@@ -24,7 +24,6 @@ div.nav {
 
 div.content {
   margin-left: 270px;
-  margin-bottom: 50px;
   padding: 10px 30px 10px 20px;
 }
 
@@ -34,6 +33,23 @@ pre, code {
 
 pre code {
   border: none;
+}
+
+.nojsdoc {
+  display: none;
+}
+
+.jsdoc-ng-link {
+  text-align: center;
+  color: #666;
+  margin-top: 30px;
+  font-size: 0.8em;
+  &:before {
+    content: "\A0";
+    border-top: 1px solid #ccc;
+    margin: 50px 30% 10px 30%;
+    display: block;
+  }
 }
 
 /* Links */

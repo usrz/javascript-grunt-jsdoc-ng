@@ -19,6 +19,9 @@
     <div class="content" ng-controller="contentController">
       <div ng-include="template" ng-if="template"></div>
       <div ng-if="!template" ng-bind-html="readme|html"></div>
+      <div class="jsdoc-ng-link">
+        Created with <a href="https://github.com/usrz/javascript-grunt-jsdoc-ng">Grunt JSDoc-NG</a>
+      </div>
     </div>
   </body>
 </html>
