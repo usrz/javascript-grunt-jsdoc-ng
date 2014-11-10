@@ -1,7 +1,7 @@
 Grunt JsDoc NG
 ==============
 
-This is a very simple wrapper to [http://usejsdoc.org/](JDDoc) for [Grunt](http://gruntjs.com/),
+This is a very simple wrapper to [JSDoc](http://usejsdoc.org/) for [Grunt](http://gruntjs.com/),
 without any need to have Java installed.
 
 Installation and usage
@@ -39,17 +39,17 @@ The various configuration options are:
 * `src`: The usual list of sources like any other [Grunt](http://gruntjs.com/) task
 * `dest`: The destination directory where documents will be written to.
 * `template`:
-  * Leave empty (or use the keyword `default`) for the standard [http://usejsdoc.org/](JDDoc) template.
+  * Leave empty (or use the keyword `default`) for the standard [JSDoc](http://usejsdoc.org/) template.
   * Use the keyword `jsdoc-ng` for my built-in, [Angular JS](https://angularjs.org/)  based template.
   * Specify any path to a template directory (where `publish.js` resides).
-* `options`: Anything recognized by [http://usejsdoc.org/](JDDoc) as a configuration (basically,
+* `options`: Anything recognized by [JSDoc](http://usejsdoc.org/) as a configuration (basically,
   the contents of your `conf.json` as specified [here](http://usejsdoc.org/about-configuring-jsdoc.html).
 
 Embedded template
 -----------------
 
 While the [Angular JS](https://angularjs.org/) doesn't expose *all* the functionalities
-of [http://usejsdoc.org/](JDDoc), it's __good enough__ (at least for me) for normal usage.
+of [JSDoc](http://usejsdoc.org/), it's __good enough__ (at least for me) for normal usage.
 
 A couple of extra options can be configured in the `templates` section of the configuration:
 
