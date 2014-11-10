@@ -23,6 +23,11 @@ function renderLinks(helper, doclet) {
       doclet.examples[i] = helper.resolveLinks(doclet.examples[i]);
     }
   }
+  if (doclet.returns) {
+    for (var i in doclet.returns) {
+      renderLinks(helper, doclet.returns[i]);
+    }
+  }
   if (doclet.params) {
     for (var i in doclet.params) {
       renderLinks(helper, doclet.params[i]);

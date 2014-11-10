@@ -59,12 +59,14 @@ ngDoc.config(['$locationProvider', '$provide', '$doclets', function($locationPro
 
 ngDoc.filter('html', ['$sce', function($sce) {
   return function(value) {
+    if (value == null) return null;
     return $sce.trustAsHtml(value);
   };
 }]);
 
 ngDoc.filter('type', ['$sce', '$docletsByName', function($sce, $docletsByName) {
   return function(value) {
+    if (value == null) return null;
     var result = /^Array\.<(.*)>$/.exec(value);
     var suffix = '';
 
@@ -342,7 +344,8 @@ ngDoc.controller('exampleController', ['$scope', '$attrs', function($scope, $att
       var caption = null;
       var result = /^(.*)\n?/.exec(example);
       if (result) {
-        caption = result[1];
+        caption = result[1].trim();
+        if (caption == '-') caption = null;
         example = example.substring(result[0].length);
       }
 
