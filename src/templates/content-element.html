@@ -9,7 +9,7 @@
      ></span>)</span
    ></span
    ><span class="types" ng-if="element.type.names"
-     ><span class="type" ng-repeat="type in element.type.names">{{type}}</span
+     ><span class="type" ng-repeat="type in element.type.names" ng-bind-html="type|type"></span
    ></span
    ><span class="static" ng-if="element.scope == 'static'"></span>
 </h3>
@@ -22,9 +22,10 @@
     <ul class="parameters">
       <li ng-repeat="param in element.params">
         <span class="types"
-            ><span class="type" ng-repeat="type in param.type.names">{{type}}</span
+            ><span class="type" ng-repeat="type in param.type.names" ng-bind-html="type|type"></span
         ></span>
         <span class="name">{{param.name}}</span>
+        <span ng-if="param.optional" class="extra">optional</span>
         <span ng-bind-html="param.description|html"></span>
       </li>
     </ul>
@@ -35,7 +36,7 @@
     <ul class="returns">
       <li ng-repeat="return in element.returns">
         <span class="types"
-           ><span class="type" ng-repeat="type in return.type.names">{{type}}</span
+           ><span class="type" ng-repeat="type in return.type.names" ng-bind-html="type|type"></span
         ></span>
         <span ng-bind-html="return.description|html"></span>
       </li>

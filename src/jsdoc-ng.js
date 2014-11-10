@@ -57,9 +57,30 @@ ngDoc.config(['$locationProvider', '$provide', '$doclets', function($locationPro
 /* FILTERS & SERVICES                                                       */
 /* ======================================================================== */
 
-ngDoc.filter('html', ['$sce', function($sce){
-  return function(val) {
-    return $sce.trustAsHtml(val);
+ngDoc.filter('html', ['$sce', function($sce) {
+  return function(value) {
+    return $sce.trustAsHtml(value);
+  };
+}]);
+
+ngDoc.filter('type', ['$sce', '$docletsByName', function($sce, $docletsByName) {
+  return function(value) {
+    var result = /^Array\.<(.*)>$/.exec(value);
+    var suffix = '';
+
+    if (result) {
+      value = result[1];
+      suffix = "[]";
+    }
+
+    var type = $docletsByName[value];
+    if (type) {
+      return $sce.trustAsHtml('<a href="#!/' + type.$href + '">' + type.name + suffix + '</a>');
+    } else {
+      return $sce.trustAsHtml((value + suffix).replace(/&/g,  '&amp;')
+                    .replace(/\'/g, '&apos;') .replace(/\"/g, '&quot;')
+                    .replace(/</g,  '&lt;')   .replace(/>/g,  '&gt;'));
+    }
   };
 }]);
 
