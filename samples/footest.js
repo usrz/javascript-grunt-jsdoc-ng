@@ -1,6 +1,7 @@
 /**
  * This is FooTest!
  *
+ * @ngdoc Foo
  * @constructor
  * @classdesc A long winded description of the FooTest class!
  * @summary Short summary...

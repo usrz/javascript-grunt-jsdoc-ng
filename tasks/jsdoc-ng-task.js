@@ -143,6 +143,26 @@ module.exports = function(grunt) {
       /* Parse command line arguments from "env.args" and load default options. */
       cli.loadConfig();
 
+      /* ==================================================================== *
+       * JSDOC: The @ngdoc (and related) tags                                 *
+       * ==================================================================== */
+
+      // var dictionary = requizzle('../node_modules/jsdoc/lib/jsdoc/tag/dictionary');
+      // dictionary.defineTag('ngdoc', {
+        // canHaveName
+        // canHaveType
+        // mustHaveValue
+        // mustNotHaveDescription
+        // mustNotHaveValue
+      //   onTagged: function(doclet, tag) {
+      //       doclet.ngdoc = true;
+      //   }
+      // });
+
+      /* ==================================================================== *
+       * JSDOC: Write the whole documentation tree                            *
+       * ==================================================================== */
+
       /* Log what we're doing */
       grunt.log.subhead("Invoking JsDoc");
       grunt.verbose.ok("JsDoc command-line arguments", env.args);
