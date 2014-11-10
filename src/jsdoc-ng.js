@@ -319,7 +319,7 @@ ngDoc.controller('exampleController', ['$scope', '$attrs', function($scope, $att
 
       /* Parse out caption */
       var caption = null;
-      var result = /^<caption>(.*)<\/caption>\n?/.exec(example);
+      var result = /^(.*)\n?/.exec(example);
       if (result) {
         caption = result[1];
         example = example.substring(result[0].length);
