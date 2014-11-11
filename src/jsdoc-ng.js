@@ -65,24 +65,43 @@ ngDoc.filter('html', ['$sce', function($sce) {
 }]);
 
 ngDoc.filter('type', ['$sce', '$docletsByName', function($sce, $docletsByName) {
-  return function(value) {
+
+  function sanitize(value) {
+    if (!value) return '';
+    return value.replace(/&/g,  '&amp;')
+                .replace(/\'/g, '&apos;')
+                .replace(/\"/g, '&quot;')
+                .replace(/</g,  '&lt;')
+                .replace(/>/g,  '&gt;');
+  }
+
+  function typeFilter(value) {
+    /* Basics */
     if (value == null) return null;
-    var result = /^Array\.<(.*)>$/.exec(value);
-    var suffix = '';
+    value = value.trim();
 
-    if (result) {
-      value = result[1];
-      suffix = "[]";
-    }
+    /* Object, array and type */
+    var object = /^Object\.<(.*),(.*)>$/.exec(value);
+    var array  = /^Array\.<(.*)>$/.exec(value);
 
-    var type = $docletsByName[value];
-    if (type) {
-      return $sce.trustAsHtml('<a href="#!/' + type.$href + '">' + type.name + suffix + '</a>');
+    /* Recurse object and array */
+    if (object) {
+      return "{" + typeFilter(object[1]) + ":&nbsp;"
+                 + typeFilter(object[2]) + "}";
+    } else if (array) {
+      return typeFilter(array[1]) + "[]";
     } else {
-      return $sce.trustAsHtml((value + suffix).replace(/&/g,  '&amp;')
-                    .replace(/\'/g, '&apos;') .replace(/\"/g, '&quot;')
-                    .replace(/</g,  '&lt;')   .replace(/>/g,  '&gt;'));
+      var type = $docletsByName[value];
+      if (type) {
+        return '<a href="#!/' + type.$href + '">' + sanitize(type.name) + '</a>';
+      } else {
+        return sanitize(value);
+      }
     }
+  }
+
+  return function(value) {
+    return $sce.trustAsHtml(typeFilter(value));
   };
 }]);
 
