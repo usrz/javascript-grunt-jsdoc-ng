@@ -6,8 +6,10 @@
 
 <div ng-if="doclet.classdesc" ng-bind-html="doclet.classdesc|html"></div>
 
-<h2>Constructor</h2>
-<div ng-include="'templates/content-element.html'" ng-repeat="element in [doclet]"></div>
+<div ng-if="doclet.description||doclet.params">
+  <h2>Constructor</h2>
+  <div ng-include="'templates/content-element.html'" ng-repeat="element in [doclet]"></div>
+</div>
 
 <div ng-if="elements.function">
   <h2>Functions</h2>
