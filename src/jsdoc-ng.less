@@ -238,21 +238,18 @@ div.content {
     border: 1px solid #ccc;
     border-radius: 4px;
 
-    /* Static label */
-    &.static {
-      &:after {
-        content: 'static';
-        position: relative;
-        top: -2px;
-        font-size: 10px;
-        font-weight: 300;
-        border: 1px solid #aaa;
-        background-color: #bbb;
-        border-radius: 4px;
-        margin-left: 10px;
-        color: #fff;
-        padding: 2px;
-      };
+    /* Static/read-only/... extra labels */
+    .extra {
+      position: relative;
+      top: -2px;
+      font-size: 10px;
+      font-weight: 300;
+      border: 1px solid #aaa;
+      background-color: #bbb;
+      border-radius: 4px;
+      margin-left: 10px;
+      color: #fff;
+      padding: 2px;
     }
 
     /* Type for members */

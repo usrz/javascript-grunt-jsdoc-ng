@@ -1,4 +1,4 @@
-<h3 id="{{element.name}}" class="literal" ng-class="{'static':(element.scope=='static')}">
+<h3 id="{{element.name}}" class="literal">
     <span class="kind">{{element.kind}}</span>
     <span class="name">{{element.name}}</span
    ><span ng-if="element.params || (element.kind == 'function') || (element.kind == 'class')"
@@ -11,7 +11,8 @@
    ><span class="types" ng-if="element.type.names"
      ><span class="type" ng-repeat="type in element.type.names" ng-bind-html="type|type"></span
    ></span
-   ><span class="static" ng-if="element.scope == 'static'"></span>
+   ><span class="extra" ng-if="element.scope == 'static'">static</span
+   ><span class="extra" ng-if="element.readonly">read-only</span>
 </h3>
 
 <div class="details">
