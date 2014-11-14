@@ -7,10 +7,12 @@
     "url": "git://github.com/usrz/javascript-jsdoc-ng.git"
   },
   "devDependencies": {
+    "esquire": "https://github.com/usrz/javascript-esquire/tarball/master",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",
     "grunt-contrib-less": "^0.12.0",
-    "grunt-contrib-uglify": "^0.6.0"
+    "grunt-contrib-uglify": "^0.6.0",
+    "usrz-promize": "https://github.com/usrz/javascript-promize/tarball/master"
   },
   "dependencies": {
     "html-minifier": "^0.6.9",

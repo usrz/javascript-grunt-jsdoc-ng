@@ -54,6 +54,8 @@ module.exports = function(grunt) {
         dest: 'samples-output',
         src: ['samples/README.md',
               'samples/*.js',
+              'node_modules/esquire/src/**/*.js',
+              'node_modules/usrz-promize/src/**/*.js',
               'node_modules/grunt-jsdoc/node_modules/jsdoc/lib/jsdoc/**/*.js'],
         options: {
           "plugins": ["plugins/markdown"],
