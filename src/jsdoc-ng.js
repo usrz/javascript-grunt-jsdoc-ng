@@ -50,6 +50,7 @@ ngDoc.config(['$locationProvider', '$provide', '$doclets', function($locationPro
   /* Provide our doclets by name/path as constants */
   $provide.constant('$docletsByName', byName);
   $provide.constant('$docletsByPath', byPath);
+  if (window) window.$$doclets = byName;
 
 }]);
 
@@ -117,8 +118,9 @@ ngDoc.factory('$docletsByName', ['$doclets', function($doclets) {
 ngDoc.factory('$filterDoclets', ['$filter', '$doclets', function($filter, $doclets) {
   return function(spec, doclets) {
     if (! doclets) doclets = $doclets;
-    var result = $filter('filter')(doclets, spec, true);
-    return $filter('orderBy')(result, "longname");
+    var results = $filter('filter')(doclets, spec, true);
+    var notypes = $filter('filter')(results, { kind: '!typedef' }, true);
+    return $filter('orderBy')(notypes, "longname");
   }
 }]);
 
@@ -211,14 +213,22 @@ function ModuleController($scope, $filterDoclets, $findChildren, spec) {
     var elements = $filterDoclets(spec);
     if ($findChildren) elements = $findChildren(elements);
     if (elements.length) {
+      var count = 0;
       var grouped = {};
       for (var i in elements) {
         var element = elements[i];
+        if (element.kind === 'typedef') continue;
+
         var kind = grouped[element.kind];
         if (!kind) kind = grouped[element.kind] = [];
         kind.push(element);
+        count ++;
       }
-      $scope.elements = grouped;
+      if (count) {
+        $scope.elements = grouped;
+      } else {
+        this.reset();
+      }
     } else {
       this.reset();
     }
@@ -311,48 +321,65 @@ ngDoc.controller('navbarExpandedController', ['$scope', '$attrs', '$filterDoclet
 }]);
 
 /* Content */
-ngDoc.controller('contentController', ['$scope', '$title', '$filterDoclets', '$findChildren', '$readme', function($scope, $title, $filterDoclets, $findChildren, $readme) {
-  ModuleController.call(this, $scope, $filterDoclets, $findChildren);
+ngDoc.controller('contentController', ['$scope', '$location', '$title', '$docletsByName', '$filterDoclets', '$findChildren', '$readme',
+  function($scope, $location, $title, $docletsByName, $filterDoclets, $findChildren, $readme) {
+    ModuleController.call(this, $scope, $filterDoclets, $findChildren);
 
-  /* Always keep our readme around */
-  $scope.readme = $readme;
+    /* Always keep our readme around */
+    $scope.readme = $readme;
 
-  /* The content doclet/page is either a class, module, globals, or readme */
-  var $this = this;
-  $scope.$on('$docletChanged', function(event, doclet) {
-    if (doclet) {
+    /* The content doclet/page is either a class, module, globals, or readme */
+    var $this = this;
+    $scope.$on('$docletChanged', function(event, doclet) {
+      if (doclet) {
 
-      var parent = doclet;
-      while (parent && (parent.kind != 'class')
-                    && (parent.kind != 'module')
-                    && (parent.kind != 'namespace')) {
-        parent = parent.$parent;
-      }
+        if (doclet.kind === 'typedef') {
+          var href = doclet.$href;
+          while (doclet && doclet.type && doclet.type.names && (doclet.kind === 'typedef')) {
+            doclet = $docletsByName[doclet.type.names[0]];
+          }
+          if (doclet && (doclet.$href != href)) {
+            $location.url(doclet.$href);
+          } else {
+            $scope.template = null;
+            $scope.doclet = null;
+            $this.reset();
+          }
+          return;
+        }
 
-      if (parent && (parent.kind == 'class')) {
-        $scope.template = "templates/content-class.html";
-        $scope.doclet = parent;
-        $this.apply({memberof: parent.longname});
-      } else if (parent && (parent.kind == 'module')) {
-        $scope.template = "templates/content-module.html";
-        $scope.doclet = parent;
-        $this.apply({memberof: parent.longname});
-      } else if (parent && (parent.kind == 'namespace')) {
-        $scope.template = "templates/content-module.html";
-        $scope.doclet = parent;
-        $this.apply({memberof: parent.longname});
+        var parent = doclet;
+        while (parent && (parent.kind != 'class')
+                      && (parent.kind != 'module')
+                      && (parent.kind != 'namespace')) {
+          parent = parent.$parent;
+        }
+
+        if (parent && (parent.kind == 'class')) {
+          $scope.template = "templates/content-class.html";
+          $scope.doclet = parent;
+          $this.apply({memberof: parent.longname});
+        } else if (parent && (parent.kind == 'module')) {
+          $scope.template = "templates/content-module.html";
+          $scope.doclet = parent;
+          $this.apply({memberof: parent.longname});
+        } else if (parent && (parent.kind == 'namespace')) {
+          $scope.template = "templates/content-module.html";
+          $scope.doclet = parent;
+          $this.apply({memberof: parent.longname});
+        } else {
+          $scope.template = "templates/content-globals.html";
+          $scope.doclet = null;
+          $this.apply({scope: 'global'});
+        }
       } else {
-        $scope.template = "templates/content-globals.html";
+        $scope.template = null;
         $scope.doclet = null;
-        $this.apply({scope: 'global'});
+        $this.reset();
       }
-    } else {
-      $scope.template = null;
-      $scope.doclet = null;
-      $this.reset();
-    }
-  });
-}]);
+    });
+  }]
+);
 
 ngDoc.controller('exampleController', ['$scope', '$attrs', function($scope, $attrs) {
   var $this = this;
