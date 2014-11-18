@@ -33,9 +33,33 @@ module.exports = function(grunt) {
   /* Register self */
   grunt.registerMultiTask('jsdoc-ng', 'Create jsDoc Documentation', function() {
 
+    /* Try to read our 'package.json' */
+    var windowTitle = null;
+    try {
+      var npm = grunt.file.readJSON('package.json');
+      console.log("NOM DESC", npm.description);
+      if (npm && npm.description) {
+        windowTitle = npm.description.trim();
+        if (npm.version) {
+          windowTitle += " (v. " + npm.version.trim() + ")";
+        }
+      }
+    } catch (error) {
+      // Just ignore if we can't read this...
+    }
+
     /* Our configurations file, to pass to JSDoc */
+    var options = this.options();
+    if (options.templates && options.templates.windowTitle) {
+      // do something about title here?
+    } else if (options.templates) {
+      options.templates.windowTitle = windowTitle;
+    } else {
+      options.templates = { windowTitle: windowTitle };
+    }
+
     var config = new tmp.File();
-    config.writeFileSync(JSON.stringify(this.options()), 'utf8');
+    config.writeFileSync(JSON.stringify(options, 'utf8'));
 
     /* Remember our options defaulter */
     var template = this.data.template || null;
