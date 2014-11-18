@@ -241,7 +241,7 @@ function ModuleController($scope, $filterDoclets, $findChildren, spec) {
  * Controller for all global doclets. Extends ModuleController.
  */
 ngDoc.controller('globalsController', ['$scope', '$filterDoclets', '$findChildren', function($scope, $filterDoclets, $findChildren) {
-  ModuleController.call(this, $scope, $filterDoclets, $findChildren, { scope: 'global' });
+  ModuleController.call(this, $scope, $filterDoclets, $findChildren, { scope: 'global', access: '!protected' });
 }]);
 
 /**
@@ -255,7 +255,7 @@ ngDoc.controller('moduleController', ['$scope', '$attrs', '$filterDoclets', '$fi
   $scope.$parent.$watch($attrs['module'] || 'module', function(module) {
     $scope.module = module;
     if (module) {
-      $this.apply({memberof: module.longname});
+      $this.apply({memberof: module.longname, access: '!protected' });
     } else {
       $this.reset();
     }
@@ -287,7 +287,7 @@ ngDoc.controller('navbarController', ['$scope', '$title', '$filterDoclets', '$fi
   });
 
   /* Inject a list of all the globals (if we have any) */
-  var globals = $filterDoclets({scope: 'global', kind: '!module'});
+  var globals = $filterDoclets({scope: 'global', kind: '!module', access: '!protected'});
   if (globals.length) {
     globals = $findChildren(globals);
     $scope.globals = globals;

@@ -33,6 +33,11 @@ function renderLinks(helper, doclet) {
       renderLinks(helper, doclet.params[i]);
     }
   }
+  if (doclet.exceptions) {
+    for (var i in doclet.exceptions) {
+      renderLinks(helper, doclet.exceptions[i]);
+    }
+  }
   return doclet;
 }
 

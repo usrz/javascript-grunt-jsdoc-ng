@@ -21,11 +21,6 @@
   <div ng-include="'templates/content-element.html'" ng-repeat="element in elements.event"></div>
 </div>
 
-<div ng-if="elements.class">
-  <h2>Classes</h2>
-  <div ng-include="'templates/content-innerclass.html'" ng-repeat="class in elements.class"></div>
-</div>
-
 <div ng-if="doclet.examples">
   <h2>Examples</h2>
   <div ng-include="'templates/content-example.html'" ng-repeat="example in doclet.examples"></div>

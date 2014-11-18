@@ -44,6 +44,18 @@
     </ul>
   </div>
 
+  <div ng-if="element.exceptions">
+    <h4>Exceptions</h4>
+    <ul class="exceptions">
+      <li ng-repeat="exception in element.exceptions">
+        <span class="types" ng-if="exception.type"
+           ><span class="type" ng-repeat="type in exception.type.names" ng-bind-html="type|type"></span
+        ></span>
+        <span ng-bind-html="exception.description|html"></span>
+      </li>
+    </ul>
+  </div>
+
   <div ng-if="element.examples">
     <h4>Examples</h4>
     <div ng-include="'templates/content-example.html'" ng-repeat="example in element.examples"></div>
