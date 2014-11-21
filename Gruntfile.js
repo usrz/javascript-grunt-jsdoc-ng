@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       'dist' : {
         template: 'jsdoc-ng',
         dest: 'samples-output',
-        src: ['samples/README.md',
+        src: ['README.md',
               'samples/*.js',
               'node_modules/esquire/src/**/*.js',
               'node_modules/usrz-promize/src/**/*.js',
