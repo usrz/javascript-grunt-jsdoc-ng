@@ -1,6 +1,6 @@
 {
   "name": "grunt-jsdoc-ng",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A JsDoc template written with NG",
   "repository": {
     "type": "git",
