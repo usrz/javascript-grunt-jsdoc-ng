@@ -4,15 +4,15 @@
   "description": "A JsDoc template written with NG",
   "repository": {
     "type": "git",
-    "url": "git://github.com/usrz/javascript-jsdoc-ng.git"
+    "url": "git://github.com/usrz/javascript-grunt-jsdoc-ng.git"
   },
   "devDependencies": {
-    "esquire": "https://github.com/usrz/javascript-esquire/tarball/master",
+    "defers": "^0.0.0",
+    "esquire": "^0.0.0",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",
     "grunt-contrib-less": "^0.12.0",
-    "grunt-contrib-uglify": "^0.6.0",
-    "promize": "https://github.com/usrz/javascript-promize/tarball/master"
+    "grunt-contrib-uglify": "^0.6.0"
   },
   "dependencies": {
     "html-minifier": "^0.6.9",
