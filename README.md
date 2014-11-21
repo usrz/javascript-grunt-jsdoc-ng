@@ -10,7 +10,7 @@ Installation and usage
 Use NPM to install this:
 
 ```bash
-npm install --save-dev https://github.com/usrz/javascript-grunt-jsdoc-ng/tarball/master
+npm install --save-dev grunt-jsdoc-ng
 ```
 
 Load the task as any other [Grunt](http://gruntjs.com/) plugin:
