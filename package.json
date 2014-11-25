@@ -1,14 +1,13 @@
 {
   "name": "grunt-jsdoc-ng",
-  "version": "0.0.1",
-  "description": "A JsDoc template written with NG",
+  "version": "0.0.2",
+  "description": "A JsDoc3 plugin for Grunt - with a Anular based template",
   "repository": {
     "type": "git",
     "url": "git://github.com/usrz/javascript-grunt-jsdoc-ng.git"
   },
   "devDependencies": {
-    "defers": "^0.0.0",
-    "esquire": "^0.0.0",
+    "esquire": "^1.0.0",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",
     "grunt-contrib-less": "^0.12.0",
