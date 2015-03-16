@@ -58,3 +58,4 @@ A couple of extra options can be configured in the `templates` section of the co
 
 See [`Gruntfile.js`](Gruntfile.js#L63-64) for an example on of how to use them.
 
+Heres a cool [tutorial](http://grunt-tasks.com/grunt-jsdoc-ng/) on grunt-tasks.com on how to use this plugin
