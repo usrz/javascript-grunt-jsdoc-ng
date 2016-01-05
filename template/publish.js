@@ -80,7 +80,7 @@ exports.publish = function(taffyData, opts, tutorials) {
         preserveLineBreaks: false,
         collapseBooleanAttributes: true
       });
-    }
+    };
   } else {
     logger.info("Output minification disabled");
   }
@@ -99,17 +99,25 @@ exports.publish = function(taffyData, opts, tutorials) {
     if (! doclet.name) return;
     if (doclet.kind == 'file') return;
 
-    var current = renderLinks(helper, JSON.parse(JSON.stringify(doclet)));
-    var id = current.___id;
-    delete current.comment;
-    delete current.meta;
-    delete current.___id;
-    delete current.___s;
+    var current;
+    try {
+      current = renderLinks(helper, JSON.parse(JSON.stringify(doclet)));
+    } catch(e) {
+      logger.info('Error parsing JSON: ' + JSON.stringify(doclet));
+      logger.info(e);
+    }
 
-    current.$href = createLink(helper, doclet, taffyData);
-    current.$id = id;
-
-    doccos.push(current);
+    if (current) {
+      current.$href = createLink(helper, doclet, taffyData);
+      current.$id = current.___id;
+  
+      delete current.comment;
+      delete current.meta;
+      delete current.___id;
+      delete current.___s;
+  
+      doccos.push(current);
+    }
   });
 
   /* Non-minified angular script */
@@ -118,7 +126,7 @@ exports.publish = function(taffyData, opts, tutorials) {
              + ".constant('$title',   " + (env.conf.templates.windowTitle ? JSON.stringify(env.conf.templates.windowTitle) : "'API documentation'") + ')'
              + ".constant('$readme',  " + (opts.readme ? JSON.stringify(opts.readme) : "''") + ')'
              + ".constant('$doclets', " + JSON.stringify(doccos, null, 2) + ');'
-             + "})();"
+             + "})();";
 
   if (doMinify) {
     logger.info("Minifying JavaScript output");
@@ -166,4 +174,4 @@ exports.publish = function(taffyData, opts, tutorials) {
     fs.copyFileSync(file, fontdir);
   });
 
-}
+};
